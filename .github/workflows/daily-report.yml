@@ -8,12 +8,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - run: pip install uv && uv sync
+
       - name: patch and run
         run: |
           KEY="${{ secrets.DEEPSEEK_API_KEY }}"
@@ -27,10 +35,11 @@ jobs:
           EMAIL_SMTP_USER: ${{ secrets.EMAIL_SMTP_USER }}
           EMAIL_SMTP_PASS: ${{ secrets.EMAIL_SMTP_PASS }}
           WECOM_WEBHOOK_URL: ${{ secrets.WECOM_WEBHOOK_URL }}
-      - uses: actions/deploy-pages@v4
+
+      - name: 上传网页文件
+        uses: actions/upload-pages-artifact@v3
         with:
           path: 'data/site'
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
+
+      - name: 部署到 GitHub Pages
+        uses: actions/deploy-pages@v4
