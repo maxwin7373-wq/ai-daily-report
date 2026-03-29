@@ -40,13 +40,13 @@
       ],
       "fetch_comments": 5
     },
-    "github": {
-      "enabled": true,
-      "trending": {
-        "enabled": true,
-        "language": "",
-        "since": "daily"
-      }
+    "github": [
+  {
+    "type": "trending",
+    "language": "",
+    "since": "daily"
+  }
+],
     }
   },
   "filtering": {
