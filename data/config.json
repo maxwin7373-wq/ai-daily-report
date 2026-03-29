@@ -41,13 +41,12 @@
       "fetch_comments": 5
     },
     "github": [
-  {
-    "type": "trending",
-    "language": "",
-    "since": "daily"
-  }
-],
-    }
+      {
+        "type": "trending",
+        "language": "",
+        "since": "daily"
+      }
+    ]
   },
   "filtering": {
     "ai_score_threshold": 6.0,
