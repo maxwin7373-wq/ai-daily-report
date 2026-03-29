@@ -13,14 +13,6 @@ jobs:
       pages: write
       id-token: write
 
-    env:
-      DEEPSEEK_API_KEY: "sk-53480528111e426790f58044c5c580c4"
-      EMAIL_SMTP_HOST: ${{ secrets.EMAIL_SMTP_HOST }}
-      EMAIL_SMTP_PORT: ${{ secrets.EMAIL_SMTP_PORT }}
-      EMAIL_SMTP_USER: ${{ secrets.EMAIL_SMTP_USER }}
-      EMAIL_SMTP_PASS: ${{ secrets.EMAIL_SMTP_PASS }}
-      WECOM_WEBHOOK_URL: ${{ secrets.WECOM_WEBHOOK_URL }}
-
     steps:
       - name: 拉取代码
         uses: actions/checkout@v4
@@ -35,10 +27,23 @@ jobs:
           pip install uv
           uv sync
 
-      - name: 运行 Horizon 生成日报
+      - name: 验证环境变量
+        env:
+          DEEPSEEK_API_KEY: "sk-53480528111e426790f58044c5c580c4"
         run: |
-          export DEEPSEEK_API_KEY="${DEEPSEEK_API_KEY}"
-          uv run horizon --hours 24
+          echo "Key长度: ${#DEEPSEEK_API_KEY}"
+          python -c "import os; k=os.getenv('DEEPSEEK_API_KEY'); print('Python读到Key长度:', len(k) if k else '未读到')"
+
+      - name: 运行 Horizon 生成日报
+        env:
+          DEEPSEEK_API_KEY: "sk-53480528111e426790f58044c5c580c4"
+          EMAIL_SMTP_HOST: ${{ secrets.EMAIL_SMTP_HOST }}
+          EMAIL_SMTP_PORT: ${{ secrets.EMAIL_SMTP_PORT }}
+          EMAIL_SMTP_USER: ${{ secrets.EMAIL_SMTP_USER }}
+          EMAIL_SMTP_PASS: ${{ secrets.EMAIL_SMTP_PASS }}
+          WECOM_WEBHOOK_URL: ${{ secrets.WECOM_WEBHOOK_URL }}
+        run: |
+          uv run --no-isolated python -m horizon --hours 24
 
       - name: 部署到 GitHub Pages
         uses: actions/deploy-pages@v4
