@@ -69,6 +69,8 @@ try:
         content = content.split("```")[1]
         if content.startswith("json"):
             content = content[4:]
+    import re
+    content = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', content)
     data = json.loads(content.strip())
     print("AI 整理成功")
 except Exception as e:
