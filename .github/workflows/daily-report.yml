@@ -36,14 +36,14 @@ jobs:
 
       - name: 运行 Horizon 生成日报
         env:
-          DEEPSEEK_API_KEY: "sk-53480528111e426790f58044c5c580c4"
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           EMAIL_SMTP_HOST: ${{ secrets.EMAIL_SMTP_HOST }}
           EMAIL_SMTP_PORT: ${{ secrets.EMAIL_SMTP_PORT }}
           EMAIL_SMTP_USER: ${{ secrets.EMAIL_SMTP_USER }}
           EMAIL_SMTP_PASS: ${{ secrets.EMAIL_SMTP_PASS }}
           WECOM_WEBHOOK_URL: ${{ secrets.WECOM_WEBHOOK_URL }}
         run: |
-          uv run --no-isolated python -m horizon --hours 24
+          uv run horizon --hours 24
 
       - name: 部署到 GitHub Pages
         uses: actions/deploy-pages@v4
