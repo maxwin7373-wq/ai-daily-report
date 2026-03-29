@@ -1,104 +1,80 @@
 {
-  "version": "1.0",
   "ai": {
     "provider": "openai",
     "model": "deepseek-chat",
-    "base_url": "https://api.deepseek.com",
-    "api_key_env": "OPENAI_API_KEY",
-    "temperature": 0.3,
-    "max_tokens": 8192,
-    "languages": [
-      "zh",
-      "en"
-    ]
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "base_url": "https://api.deepseek.com/v1",
+    "languages": ["zh"],
+    "summary_prompt": "你是一位专业的 AI 科技日报编辑。请用中文生成日报，包含以下版块：\n1. 【今日必知】最重要的 3 条新闻，一句话说清楚为什么重要\n2. 【大佬说了啥】行业大佬的观点/推文摘要\n3. 【值得读的论文】用大白话解读今日重要论文，说清楚研究了什么、有什么用\n4. 【热门开源项目】详细中文简介，包括功能、适合谁用、怎么上手\n5. 【落地风向标】真实产品发布、融资信息、商业落地案例\n6. 【趋势洞察】今日内容背后的整体趋势判断\n语言要轻松易读，适合通勤路上手机阅读，避免堆砌术语。"
   },
   "sources": {
-    "github": [
-      {
-        "type": "user_events",
-        "username": "karpathy",
-        "enabled": true
-      },
-      {
-        "type": "repo_releases",
-        "owner": "vllm-project",
-        "repo": "vllm",
-        "enabled": true
-      },
-      {
-        "type": "repo_releases",
-        "owner": "sgl-project",
-        "repo": "sglang",
-        "enabled": true
-      },
-      {
-        "type": "repo_releases",
-        "owner": "triton-lang",
-        "repo": "triton",
-        "enabled": true
-      }
-    ],
     "hackernews": {
       "enabled": true,
-      "fetch_top_stories": 10,
-      "min_score": 200
+      "fetch_top_stories": 30,
+      "min_score": 100
     },
     "rss": [
       {
+        "name": "机器之心",
+        "url": "https://www.jiqizhixin.com/rss"
+      },
+      {
+        "name": "量子位",
+        "url": "https://www.qbitai.com/feed"
+      },
+      {
         "name": "Simon Willison",
-        "url": "https://simonwillison.net/atom/everything/",
-        "enabled": true,
-        "category": "ai-tools"
+        "url": "https://simonwillison.net/atom/everything/"
       },
       {
-        "name": "GitHub Trending - Daily",
-        "url": "https://mshibanami.github.io/GitHubTrendingRSS/daily/all.xml",
-        "enabled": true,
-        "category": "github-trending"
-      },
-      {
-        "name": "LWN.net",
-        "url": "https://lwn.net/headlines/full_text?key=${LWN_KEY}",
-        "enabled": true,
-        "category": "linux-kernel"
+        "name": "The Batch",
+        "url": "https://www.deeplearning.ai/the-batch/feed/"
       }
     ],
     "reddit": {
       "enabled": true,
       "subreddits": [
-        {
-          "subreddit": "MachineLearning",
-          "enabled": true,
-          "sort": "hot",
-          "time_filter": "day",
-          "fetch_limit": 15,
-          "min_score": 60
-        },
-        {
-          "subreddit": "LocalLLaMA",
-          "enabled": true,
-          "sort": "hot",
-          "time_filter": "day",
-          "fetch_limit": 15,
-          "min_score": 60
-        }
+        { "subreddit": "MachineLearning", "sort": "hot" },
+        { "subreddit": "LocalLLaMA", "sort": "hot" },
+        { "subreddit": "artificial", "sort": "hot" }
       ],
-      "users": [],
-      "fetch_comments": 10
+      "fetch_comments": 5
     },
-    "telegram": {
+    "github": {
       "enabled": true,
-      "channels": [
-        {
-          "channel": "zaihuapd",
-          "enabled": true,
-          "fetch_limit": 20
-        }
-      ]
+      "trending": {
+        "enabled": true,
+        "language": "",
+        "since": "daily"
+      }
     }
   },
   "filtering": {
-    "ai_score_threshold": 7.0,
+    "ai_score_threshold": 6.0,
     "time_window_hours": 24
+  },
+  "output": {
+    "formats": ["html", "markdown"],
+    "site": {
+      "title": "AI 科技日报",
+      "description": "每天 8 点，精选 AI 科技动态"
+    }
+  },
+  "notifications": {
+    "wecom_webhook": {
+      "enabled": true,
+      "webhook_url_env": "WECOM_WEBHOOK_URL",
+      "message_template": "📰 今日 AI 日报已出炉！\n\n{summary_excerpt}\n\n🔗 完整版：{site_url}"
+    },
+    "email": {
+      "enabled": true,
+      "smtp_host_env": "EMAIL_SMTP_HOST",
+      "smtp_port_env": "EMAIL_SMTP_PORT",
+      "smtp_user_env": "EMAIL_SMTP_USER",
+      "smtp_pass_env": "EMAIL_SMTP_PASS",
+      "from": "AI日报 <{EMAIL_SMTP_USER}>",
+      "to": ["522047179@qq.com"],
+      "subject": "【AI日报】{date} 今日精选"
+    }
   }
 }
