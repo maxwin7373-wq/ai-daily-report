@@ -24,17 +24,6 @@ class AIClient(ABC):
         temperature: float = 0.3,
         max_tokens: int = 4096
     ) -> str:
-        """Generate completion from AI model.
-
-        Args:
-            system: System prompt
-            user: User prompt
-            temperature: Sampling temperature
-            max_tokens: Maximum tokens to generate
-
-        Returns:
-            str: Generated completion text
-        """
         pass
 
 
@@ -42,14 +31,9 @@ class AnthropicClient(AIClient):
     """Client for Anthropic Claude models."""
 
     def __init__(self, config: AIConfig):
-        """Initialize Anthropic client.
-
-        Args:
-            config: AI configuration
-        """
-api_key = os.getenv(config.api_key_env) or os.getenv("DEEPSEEK_API_KEY") or os.getenv("OPENAI_API_KEY")
-if not api_key:
-    raise ValueError(f"Missing API key: {config.api_key_env}")
+        api_key = os.getenv(config.api_key_env)
+        if not api_key:
+            raise ValueError(f"Missing API key: {config.api_key_env}")
 
         kwargs = {"api_key": api_key}
         if config.base_url:
@@ -66,17 +50,6 @@ if not api_key:
         temperature: float = 0.3,
         max_tokens: int = 4096
     ) -> str:
-        """Generate completion using Claude.
-
-        Args:
-            system: System prompt
-            user: User prompt
-            temperature: Sampling temperature
-            max_tokens: Maximum tokens to generate
-
-        Returns:
-            str: Generated text
-        """
         message = await self.client.messages.create(
             model=self.model,
             max_tokens=max_tokens,
@@ -98,12 +71,11 @@ class OpenAIClient(AIClient):
     """Client for OpenAI models."""
 
     def __init__(self, config: AIConfig):
-        """Initialize OpenAI client.
-
-        Args:
-            config: AI configuration
-        """
-        api_key = os.getenv(config.api_key_env)
+        api_key = (
+            os.getenv(config.api_key_env)
+            or os.getenv("DEEPSEEK_API_KEY")
+            or os.getenv("OPENAI_API_KEY")
+        )
         if not api_key:
             raise ValueError(f"Missing API key: {config.api_key_env}")
 
@@ -122,17 +94,6 @@ class OpenAIClient(AIClient):
         temperature: float = 0.3,
         max_tokens: int = 4096
     ) -> str:
-        """Generate completion using OpenAI.
-
-        Args:
-            system: System prompt
-            user: User prompt
-            temperature: Sampling temperature
-            max_tokens: Maximum tokens to generate
-
-        Returns:
-            str: Generated text
-        """
         response = await self.client.chat.completions.create(
             model=self.model,
             messages=[
@@ -157,11 +118,6 @@ class MiniMaxClient(AIClient):
     """Client for MiniMax models via OpenAI-compatible API."""
 
     def __init__(self, config: AIConfig):
-        """Initialize MiniMax client.
-
-        Args:
-            config: AI configuration
-        """
         api_key = os.getenv(config.api_key_env)
         if not api_key:
             raise ValueError(f"Missing API key: {config.api_key_env}")
@@ -182,21 +138,6 @@ class MiniMaxClient(AIClient):
         temperature: float = 0.3,
         max_tokens: int = 4096
     ) -> str:
-        """Generate completion using MiniMax.
-
-        MiniMax requires temperature in (0.0, 1.0] and does not support
-        response_format, so we rely on prompt engineering for JSON output.
-
-        Args:
-            system: System prompt
-            user: User prompt
-            temperature: Sampling temperature
-            max_tokens: Maximum tokens to generate
-
-        Returns:
-            str: Generated text
-        """
-        # MiniMax temperature must be in (0.0, 1.0]; clamp 0 to a small value
         if temperature <= 0:
             temperature = 0.01
 
@@ -223,11 +164,6 @@ class AliClient(AIClient):
     """Client for Alibaba DashScope (OpenAI-compatible API)."""
 
     def __init__(self, config: AIConfig):
-        """Initialize DashScope client.
-
-        Args:
-            config: AI configuration
-        """
         api_key = os.getenv(config.api_key_env)
         if not api_key:
             raise ValueError(f"Missing API key: {config.api_key_env}")
@@ -247,17 +183,6 @@ class AliClient(AIClient):
         temperature: float = 0.3,
         max_tokens: int = 4096
     ) -> str:
-        """Generate completion using DashScope.
-
-        Args:
-            system: System prompt
-            user: User prompt
-            temperature: Sampling temperature
-            max_tokens: Maximum tokens to generate
-
-        Returns:
-            str: Generated text
-        """
         response = await self.client.chat.completions.create(
             model=self.model,
             messages=[
@@ -275,11 +200,6 @@ class GeminiClient(AIClient):
     """Client for Google Gemini models."""
 
     def __init__(self, config: AIConfig):
-        """Initialize Gemini client.
-
-        Args:
-            config: AI configuration
-        """
         api_key = os.getenv(config.api_key_env)
         if not api_key:
             raise ValueError(f"Missing API key: {config.api_key_env}")
@@ -296,17 +216,6 @@ class GeminiClient(AIClient):
         temperature: float = 0.3,
         max_tokens: int = 4096
     ) -> str:
-        """Generate completion using Gemini.
-
-        Args:
-            system: System prompt
-            user: User prompt
-            temperature: Sampling temperature
-            max_tokens: Maximum tokens to generate
-
-        Returns:
-            str: Generated text
-        """
         response = await self.client.aio.models.generate_content(
             model=self.model,
             contents=user,
@@ -327,17 +236,6 @@ class GeminiClient(AIClient):
 
 
 def create_ai_client(config: AIConfig) -> AIClient:
-    """Factory function to create appropriate AI client.
-
-    Args:
-        config: AI configuration
-
-    Returns:
-        AIClient: Initialized AI client
-
-    Raises:
-        ValueError: If provider is not supported
-    """
     if config.provider == AIProvider.ANTHROPIC:
         return AnthropicClient(config)
     elif config.provider == AIProvider.OPENAI:
