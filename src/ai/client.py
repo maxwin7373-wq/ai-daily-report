@@ -47,9 +47,9 @@ class AnthropicClient(AIClient):
         Args:
             config: AI configuration
         """
-        api_key = os.getenv(config.api_key_env)
-        if not api_key:
-            raise ValueError(f"Missing API key: {config.api_key_env}")
+api_key = os.getenv(config.api_key_env) or os.getenv("DEEPSEEK_API_KEY") or os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise ValueError(f"Missing API key: {config.api_key_env}")
 
         kwargs = {"api_key": api_key}
         if config.base_url:
