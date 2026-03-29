@@ -1,4 +1,4 @@
-import os, glob, json, requests, subprocess
+import os, glob, json, requests, subprocess, re
 from datetime import datetime
 
 today = subprocess.check_output("date +%Y-%m-%d", shell=True).decode().strip()
@@ -54,7 +54,8 @@ prompt = f"""你是一位专业的 AI 科技日报编辑。请根据下面的原
 4. 开源项目优先选今日涨星快的和 Agent 相关的，至少 5 个
 5. 落地风向标至少 4 条，包含融资、产品上线、企业落地案例
 6. 如果原始内容中某板块信息不足，用当前 AI 领域真实的近期动态补充
-7. JSON 必须合法，不要有多余的逗号或注释"""
+7. JSON 必须合法，不要有多余的逗号或注释
+8. 所有字符串值中不能包含换行符，请用空格代替"""
 
 try:
     resp = requests.post(
@@ -69,8 +70,10 @@ try:
         content = content.split("```")[1]
         if content.startswith("json"):
             content = content[4:]
-    import re
     content = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', content)
+    print("=== DeepSeek 返回内容 ===")
+    print(content[:3000])
+    print("=== 返回内容结束 ===")
     data = json.loads(content.strip())
     print("AI 整理成功")
 except Exception as e:
