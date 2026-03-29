@@ -28,12 +28,6 @@ jobs:
           find .venv -name "client.py" -path "*/ai/client.py" -exec \
             sed -i "s|api_key = os.getenv(config.api_key_env)|api_key = os.getenv(config.api_key_env) or '${KEY}'|g" {} \;
           uv run horizon --hours 24
-          echo "=== 根目录 ==="
-          ls -la
-          echo "=== data目录 ==="
-          find data/ -type d 2>/dev/null
-          echo "=== 所有HTML文件 ==="
-          find . -name "*.html" -not -path "./.venv/*" 2>/dev/null
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           EMAIL_SMTP_HOST: ${{ secrets.EMAIL_SMTP_HOST }}
@@ -45,7 +39,7 @@ jobs:
       - name: 上传网页文件
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'data/site'
+          path: 'docs'
 
       - name: 部署到 GitHub Pages
         uses: actions/deploy-pages@v4
