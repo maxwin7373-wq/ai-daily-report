@@ -1,9 +1,9 @@
 {
   "ai": {
     "provider": "openai",
-    "model": "deepseek-chat",
+    "model": "qwen3.5-plus",
     "api_key_env": "DEEPSEEK_API_KEY",
-    "base_url": "https://api.deepseek.com/v1",
+    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
     "languages": ["zh"],
     "summary_prompt": "你是一位专业的 AI 科技日报编辑。请用中文生成日报，包含以下版块：\n1. 【今日必知】最重要的 3 条新闻，一句话说清楚为什么重要\n2. 【大佬说了啥】行业大佬的观点/推文摘要\n3. 【值得读的论文】用大白话解读今日重要论文，说清楚研究了什么、有什么用\n4. 【热门开源项目】详细中文简介，包括功能、适合谁用、怎么上手\n5. 【落地风向标】真实产品发布、融资信息、商业落地案例\n6. 【趋势洞察】今日内容背后的整体趋势判断\n语言要轻松易读，适合通勤路上手机阅读，避免堆砌术语。"
   },
