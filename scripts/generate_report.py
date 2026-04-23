@@ -64,7 +64,7 @@ try:
     resp = requests.post(
         ""https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions""",
         headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-        json={"model": "qwen3.5-plus", "messages": [{"role": "user", "content": prompt}], "max_tokens": 3000},
+        json={"model": "qwen-plus", "messages": [{"role": "user", "content": prompt}], "max_tokens": 3000},
         timeout=120
     )
     result = resp.json()
