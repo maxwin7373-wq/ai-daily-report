@@ -1,7 +1,7 @@
 {
   "ai": {
     "provider": "openai",
-    "model": "qwen3.5-plus",
+    "model": "qwen-plus",
     "api_key_env": "DEEPSEEK_API_KEY",
     "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
     "languages": ["zh"],
