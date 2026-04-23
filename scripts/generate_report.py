@@ -62,9 +62,9 @@ prompt = f"""你是一位专业的 AI 科技日报编辑。请根据下面的原
 
 try:
     resp = requests.post(
-        "https://api.deepseek.com/v1/chat/completions",
+        ""https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"",
         headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-        json={"model": "deepseek-chat", "messages": [{"role": "user", "content": prompt}], "max_tokens": 3000},
+        json={"model": "qwen3.5-plus", "messages": [{"role": "user", "content": prompt}], "max_tokens": 3000},
         timeout=120
     )
     result = resp.json()
